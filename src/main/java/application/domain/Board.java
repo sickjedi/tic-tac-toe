@@ -28,8 +28,8 @@ public class Board {
         return position == 'e';
     }
 
-    public static void playMove(Game game, int row, int column, char mark) {
-        game.getBoard().setField(row - 1, column - 1, mark);
+    public static void playMove(Game game, Move move) {
+        game.getBoard().setField(move.getRow() - 1, move.getColumn() - 1, move.getMark());
     }
 
     public static char getPosition(int row, int column) {

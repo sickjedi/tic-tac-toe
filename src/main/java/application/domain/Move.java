@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Move {
-    private String player;
+    private char mark;
     private int row;
     private int column;
 }

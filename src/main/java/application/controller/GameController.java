@@ -1,6 +1,7 @@
 package application.controller;
 
 import application.domain.Game;
+import application.domain.Move;
 import application.domain.Player;
 import application.service.GameService;
 import application.service.PlayService;
@@ -75,16 +76,18 @@ public class GameController {
                                              @RequestParam (value = "column") int column) {
 
         Game game = gameService.getGame(id);
-
-        if (gameService.isGameFinished(game))
-            return new ResponseEntity<>("Game finished!", HttpStatus.PRECONDITION_FAILED);
-
-        if (!playService.isMoveValid(game, row, column))
-            return new ResponseEntity<>("Move not valid!", HttpStatus.PRECONDITION_FAILED);
-
         char mark = playerService.getMarkForHumanPlayer(game);
+        Move move = new Move(mark, row, column);
 
-        playService.playMove(game, row, column, mark);
+        if (gameService.isGameFinished(game)) {
+            return new ResponseEntity<>("Game finished!", HttpStatus.PRECONDITION_FAILED);
+        }
+
+        if (!playService.isMoveValid(game, row, column)) {
+            return new ResponseEntity<>("Move not valid!", HttpStatus.PRECONDITION_FAILED);
+        }
+
+        playService.playMove(game, move);
         if (gameService.isGameFinished(game))
             return new ResponseEntity<>("Game over!", HttpStatus.OK);
         else {

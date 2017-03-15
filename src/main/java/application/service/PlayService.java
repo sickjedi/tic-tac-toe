@@ -1,9 +1,6 @@
 package application.service;
 
-import application.domain.Board;
-import application.domain.Game;
-import application.domain.GameStatus;
-import application.domain.GameStrategy;
+import application.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,19 +9,21 @@ public class PlayService {
 
     static GameService gameService;
     static PlayerService playerService;
+    static StrongStrategyService strongStrategyService;
 
     @Autowired
-    public PlayService (GameService gameService, PlayerService playerService) {
+    public PlayService (GameService gameService, PlayerService playerService, StrongStrategyService strongStrategyService) {
         this.gameService = gameService;
         this.playerService = playerService;
+        this.strongStrategyService = strongStrategyService;
     }
 
     public static boolean isMoveValid(Game game, int row, int column) {
         return Board.isMoveValid(game, row, column);
     }
 
-    public static void playMove(Game game, int row, int column, char mark) {
-        Board.playMove(game, row, column, mark);
+    public static void playMove(Game game, Move move) {
+        Board.playMove(game, move);
 
         checkWinCondition(game);
 
@@ -35,6 +34,7 @@ public class PlayService {
         if (GameStrategy.WEAK.equals(game.getStrategy())){
             playWeakMove(game);
         }
+        playStrongMove(game);
     }
 
     private static void checkWinCondition(Game game) {
@@ -90,14 +90,20 @@ public class PlayService {
 
     private static void playWeakMove(Game game) {
         char mark = playerService.getMarkForComputerPlayer(game);
+        Move move;
         for (int row = 1; row <= 3; row++) {
             for (int column = 1; column <= 3; column++) {
                 if (isMoveValid(game, row, column)) {
-                    playMove(game, row, column, mark);
+                    move = new Move(mark, row, column);
+                    playMove(game, move);
                     return;
                 }
             }
         }
+    }
+
+    private static void playStrongMove(Game game) {
+
     }
 
     private static char rowWin(Board board) {
