@@ -103,7 +103,10 @@ public class PlayService {
     }
 
     private static void playStrongMove(Game game) {
+        char mark = playerService.getMarkForComputerPlayer(game);
+        Move move = strongStrategyService.getStrongMove(game.getBoard(), mark);
 
+        playMove(game, move);
     }
 
     private static char rowWin(Board board) {

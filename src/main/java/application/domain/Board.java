@@ -39,4 +39,13 @@ public class Board {
     private void setField(int row, int column, char playerSign) {
         board[row][column] = playerSign;
     }
+
+    public int getPositionValue(int row, int column, char mark) {
+        if (getPosition(row, column) == mark)
+            return 1;
+        else if (getPosition(row, column) == 'e')
+            return 0;
+        else
+            return -1;
+    }
 }
